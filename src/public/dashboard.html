@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HelpDesk - STEFANINI GROUP</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa;
+      color: #333;
+    }
+
+    /* NAVBAR */
+    .navbar {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      color: white;
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .navbar-brand h1 {
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .navbar-brand p {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 15px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+    }
+
+    .logout-btn {
+      padding: 8px 20px;
+      background: #ff6b6b;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: #ff5252;
+      transform: translateY(-2px);
+    }
+
+    /* CONTAINER */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    /* HEADER */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .page-header h2 {
+      font-size: 28px;
+      color: #1e3c72;
+    }
+
+    .btn-new {
+      padding: 12px 25px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-new:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    /* MODAL */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 10px;
+      padding: 40px;
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      border-bottom: 2px solid #f0f0f0;
+      padding-bottom: 15px;
+    }
+
+    .modal-header h3 {
+      font-size: 20px;
+      color: #1e3c72;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: #999;
+      transition: color 0.3s;
+    }
+
+    .close-btn:hover {
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s;
+      margin-top: 10px;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* TABLA DE TICKETS */
+    .tickets-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 20px;
+    }
+
+    .ticket-card {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s;
+      border-left: 5px solid #ddd;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ticket-card:hover {
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+      transform: translateY(-5px);
+    }
+
+    /* Semáforos por prioridad */
+    .ticket-card.prioridad-critica {
+      border-left-color: #ff3333;
+      background: linear-gradient(135deg, #fff9f9 0%, #ffeeee 100%);
+    }
+
+    .ticket-card.prioridad-alta {
+      border-left-color: #ff9500;
+      background: linear-gradient(135deg, #fffbf5 0%, #fff0e6 100%);
+    }
+
+    .ticket-card.prioridad-media {
+      border-left-color: #ffc107;
+      background: linear-gradient(135deg, #fffef0 0%, #fffce6 100%);
+    }
+
+    .ticket-card.prioridad-baja {
+      border-left-color: #4caf50;
+      background: linear-gradient(135deg, #f9fff5 0%, #f0ffe6 100%);
+    }
+
+    .priority-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    .badge-critica {
+      background: #ff3333;
+      color: white;
+    }
+
+    .badge-alta {
+      background: #ff9500;
+      color: white;
+    }
+
+    .badge-media {
+      background: #ffc107;
+      color: #333;
+    }
+
+    .badge-baja {
+      background: #4caf50;
+      color: white;
+    }
+
+    .ticket-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 15px;
+    }
+
+    .ticket-id {
+      font-size: 12px;
+      color: #999;
+      background: #f5f5f5;
+      padding: 4px 8px;
+      border-radius: 3px;
+    }
+
+    .ticket-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1e3c72;
+      margin: 10px 0;
+      line-height: 1.4;
+    }
+
+    .ticket-meta {
+      display: flex;
+      gap: 10px;
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 15px;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .ticket-description {
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 15px;
+      line-height: 1.5;
+      max-height: 60px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ticket-scores {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 15px;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.03);
+      border-radius: 5px;
+    }
+
+    .score-item {
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .score-label {
+      color: #999;
+      font-size: 11px;
+    }
+
+    .score-value {
+      font-weight: 600;
+      color: #1e3c72;
+      font-size: 14px;
+      margin-top: 3px;
+    }
+
+    .score-points {
+      color: #667eea;
+      font-weight: 700;
+    }
+
+    .ticket-estado {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    .estado-pendiente {
+      background: #e3f2fd;
+      color: #1976d2;
+    }
+
+    .estado-en-proceso {
+      background: #fff3e0;
+      color: #f57c00;
+    }
+
+    .estado-resuelto {
+      background: #e8f5e9;
+      color: #388e3c;
+    }
+
+    .ticket-actions {
+      display: flex;
+      gap: 10px;
+      border-top: 1px solid #eee;
+      padding-top: 15px;
+    }
+
+    .btn-action {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ddd;
+      background: white;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .btn-edit {
+      color: #667eea;
+      border-color: #667eea;
+    }
+
+    .btn-edit:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-delete {
+      color: #ff6b6b;
+      border-color: #ff6b6b;
+    }
+
+    .btn-delete:hover {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    /* ESTADO VACÍO */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #999;
+    }
+
+    .empty-state svg {
+      width: 80px;
+      height: 80px;
+      opacity: 0.3;
+      margin-bottom: 20px;
+    }
+
+    .empty-state h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #666;
+    }
+
+    /* LOADER */
+    .loader {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(102, 126, 234, 0.3);
+      border-radius: 50%;
+      border-top-color: #667eea;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* MENSAJE */
+    .message {
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      display: none;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.success {
+      background: #e8f5e9;
+      border-left: 4px solid #4caf50;
+      color: #2e7d32;
+    }
+
+    .message.error {
+      background: #ffebee;
+      border-left: 4px solid #f44336;
+      color: #c62828;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .page-header {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .tickets-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-content {
+        width: 95%;
+        margin: 20px;
+      }
+    }
+
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      text-align: center;
+    }
+
+    .stat-card h3 {
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .stat-card .number {
+      font-size: 32px;
+      font-weight: 700;
+      color: #1e3c72;
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" style="width: 120px; height: 32px; margin-right: 15px; display: inline-block;">
+        <path d="M 20 30 Q 25 20 30 30" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M 20 40 Q 25 30 30 40" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M 20 50 Q 25 40 30 50" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <text x="45" y="53" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="white">STEFANINI</text>
+      </svg>
+      <div>
+        <h1>HelpDesk</h1>
+        <p>STEFANINI GROUP - Sistema de Soporte Técnico</p>
+      </div>
+    </div>
+    <div class="navbar-right">
+      <div class="user-info">
+        <span id="userDisplay">Usuario</span>
+      </div>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="container">
+    <div id="message" class="message"></div>
+
+    <!-- HEADER -->
+    <div class="page-header">
+      <h2>Gestión de Tickets</h2>
+      <button class="btn-new" onclick="openNewTicketModal()">Nuevo Ticket</button>
+    </div>
+
+    <!-- ESTADÍSTICAS -->
+    <div class="stats-bar">
+      <div class="stat-card">
+        <h3>Total de Tickets</h3>
+        <div class="number" id="totalTickets">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Pendientes</h3>
+        <div class="number" id="pendingTickets" style="color: #ffc107;">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>En Proceso</h3>
+        <div class="number" id="processingTickets" style="color: #ff9500;">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Críticos</h3>
+        <div class="number" id="criticalTickets" style="color: #ff3333;">0</div>
+      </div>
+    </div>
+
+    <!-- GRID DE TICKETS -->
+    <div id="ticketsContainer" class="tickets-grid">
+      <div class="empty-state">
+        <h3>No hay tickets aún</h3>
+        <p>Crea el primer ticket para empezar</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PARA CREAR/EDITAR TICKET -->
+  <div id="ticketModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">Nuevo Ticket</h3>
+        <button class="close-btn" onclick="closeTicketModal()" style="font-size: 24px;">&times;</button>
+      </div>
+
+      <form id="ticketForm" onsubmit="saveTicket(event)">
+        <div class="form-group">
+          <label for="nombreSolicitante">Nombre del Solicitante *</label>
+          <input type="text" id="nombreSolicitante" name="nombreSolicitante" required>
+        </div>
+
+        <div class="form-group">
+          <label for="correo">Correo Electrónico *</label>
+          <input type="email" id="correo" name="correo" required>
+        </div>
+
+        <div class="form-group">
+          <label for="categoria">Categoría *</label>
+          <select id="categoria" name="categoria" required>
+            <option value="">Selecciona una categoría</option>
+            <option value="hardware">Hardware</option>
+            <option value="software">Software</option>
+            <option value="red">Red</option>
+            <option value="cuenta">Cuenta</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="descripcion">Descripción *</label>
+          <textarea id="descripcion" name="descripcion" rows="3" required></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="impacto">Impacto *</label>
+            <select id="impacto" name="impacto" required>
+              <option value="">Selecciona impacto</option>
+              <option value="bajo">Bajo (1 punto)</option>
+              <option value="medio">Medio (2 puntos)</option>
+              <option value="alto">Alto (3 puntos)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="urgencia">Urgencia *</label>
+            <select id="urgencia" name="urgencia" required>
+              <option value="">Selecciona urgencia</option>
+              <option value="baja">Baja (1 punto)</option>
+              <option value="media">Media (2 puntos)</option>
+              <option value="alta">Alta (3 puntos)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="tiempoEstimado">Tiempo Estimado (horas) *</label>
+          <input type="number" id="tiempoEstimado" name="tiempoEstimado" min="1" required>
+        </div>
+
+        <div class="form-group">
+          <label for="estado">Estado</label>
+          <select id="estado" name="estado">
+            <option value="pendiente">Pendiente</option>
+            <option value="en proceso">En proceso</option>
+            <option value="resuelto">Resuelto</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">Crear Ticket</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let authToken = localStorage.getItem('authToken');
+    let currentUser = JSON.parse(localStorage.getItem('user')) || {};
+    let editingTicketId = null;
+
+    // Mostrar usuario
+    document.getElementById('userDisplay').textContent = currentUser.username || 'Usuario';
+
+    // Cargar tickets al abrir la página
+    document.addEventListener('DOMContentLoaded', loadTickets);
+
+    // CARGAR TICKETS
+    async function loadTickets() {
+      try {
+        const response = await fetch('/api/tickets', {
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          }
+        });
+
+        if (!response.ok) {
+          if (response.status === 401) {
+            logout();
+            return;
+          }
+          throw new Error('Error al cargar tickets');
+        }
+
+        const data = await response.json();
+        renderTickets(data.tickets);
+        updateStats(data.tickets);
+      } catch (error) {
+        console.error('Error:', error);
+        showMessage('Error al cargar los tickets', 'error');
+      }
+    }
+
+    // RENDERIZAR TICKETS
+    function renderTickets(tickets) {
+      const container = document.getElementById('ticketsContainer');
+
+      if (!tickets || tickets.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <h3>No hay tickets aún</h3>
+            <p>Crea el primer ticket para empezar</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = tickets.map(ticket => `
+        <div class="ticket-card prioridad-${ticket.prioridad.toLowerCase()}">
+          <div class="ticket-header">
+            <span class="priority-badge badge-${ticket.prioridad.toLowerCase()}">
+              ${ticket.prioridad}
+            </span>
+            <span class="ticket-id">ID: #${ticket.id}</span>
+          </div>
+
+          <div class="ticket-title">${ticket.nombreSolicitante}</div>
+
+          <div class="ticket-meta">
+            <div class="meta-item">Correo: ${ticket.correo}</div>
+            <div class="meta-item">Categoría: ${ticket.categoria}</div>
+          </div>
+
+          <div class="ticket-description">${ticket.descripcion}</div>
+
+          <div class="ticket-scores">
+            <div class="score-item">
+              <div class="score-label">Impacto</div>
+              <div class="score-value">${capitalize(ticket.impacto)} <span class="score-points">(${getPuntaje(ticket.impacto)})</span></div>
+            </div>
+            <div class="score-item">
+              <div class="score-label">Urgencia</div>
+              <div class="score-value">${capitalize(ticket.urgencia)} <span class="score-points">(${getPuntaje(ticket.urgencia)})</span></div>
+            </div>
+            <div class="score-item">
+              <div class="score-label">Tiempo Est.</div>
+              <div class="score-value">${ticket.tiempoEstimado}h</div>
+            </div>
+            <div class="score-item">
+              <div class="score-label">Puntaje Total</div>
+              <div class="score-value"><span class="score-points">${calcularPuntajeTotal(ticket)}</span></div>
+            </div>
+          </div>
+
+          <span class="ticket-estado estado-${ticket.estado.replace(' ', '-')}">
+            ${capitalize(ticket.estado)}
+          </span>
+
+          <div class="ticket-actions">
+            <button class="btn-action btn-edit" onclick="editTicket(${ticket.id})">Editar</button>
+            <button class="btn-action btn-delete" onclick="deleteTicket(${ticket.id})">Eliminar</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ACTUALIZAR ESTADÍSTICAS
+    function updateStats(tickets) {
+      const total = tickets.length;
+      const pending = tickets.filter(t => t.estado === 'pendiente').length;
+      const processing = tickets.filter(t => t.estado === 'en proceso').length;
+      const critical = tickets.filter(t => t.prioridad === 'Crítica').length;
+
+      document.getElementById('totalTickets').textContent = total;
+      document.getElementById('pendingTickets').textContent = pending;
+      document.getElementById('processingTickets').textContent = processing;
+      document.getElementById('criticalTickets').textContent = critical;
+    }
+
+    // CALCULAR PUNTAJE TOTAL
+    function calcularPuntajeTotal(ticket) {
+      const impactoMap = { bajo: 1, medio: 2, alto: 3 };
+      const urgenciaMap = { baja: 1, media: 2, alta: 3 };
+
+      let puntaje = impactoMap[ticket.impacto] + urgenciaMap[ticket.urgencia];
+
+      if (ticket.categoria === 'red' || ticket.categoria === 'cuenta') {
+        puntaje += 1;
+      }
+
+      if (ticket.tiempoEstimado > 4) {
+        puntaje += 1;
+      }
+
+      return puntaje;
+    }
+
+    // OBTENER PUNTAJE
+    function getPuntaje(valor) {
+      const map = {
+        'bajo': 1, 'baja': 1,
+        'medio': 2, 'media': 2,
+        'alto': 3, 'alta': 3
+      };
+      return map[valor] || 0;
+    }
+
+    // ABRIR MODAL NUEVO TICKET
+    function openNewTicketModal() {
+      editingTicketId = null;
+      document.getElementById('modalTitle').textContent = 'Nuevo Ticket';
+      document.getElementById('submitBtn').textContent = 'Crear Ticket';
+      document.getElementById('ticketForm').reset();
+      document.getElementById('ticketForm').style.display = 'block';
+      document.getElementById('ticketModal').classList.add('show');
+    }
+
+    // EDITAR TICKET
+    async function editTicket(id) {
+      try {
+        const response = await fetch(`/api/tickets/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          }
+        });
+
+        if (!response.ok) throw new Error('Error al cargar ticket');
+
+        const data = await response.json();
+        const ticket = data.ticket;
+
+        editingTicketId = id;
+        document.getElementById('modalTitle').textContent = 'Editar Ticket';
+        document.getElementById('submitBtn').textContent = 'Actualizar Ticket';
+
+        document.getElementById('nombreSolicitante').value = ticket.nombreSolicitante;
+        document.getElementById('correo').value = ticket.correo;
+        document.getElementById('categoria').value = ticket.categoria;
+        document.getElementById('descripcion').value = ticket.descripcion;
+        document.getElementById('impacto').value = ticket.impacto;
+        document.getElementById('urgencia').value = ticket.urgencia;
+        document.getElementById('tiempoEstimado').value = ticket.tiempoEstimado;
+        document.getElementById('estado').value = ticket.estado;
+
+        document.getElementById('ticketModal').classList.add('show');
+      } catch (error) {
+        showMessage('Error al cargar ticket', 'error');
+      }
+    }
+
+    // GUARDAR TICKET
+    async function saveTicket(event) {
+      event.preventDefault();
+
+      const formData = {
+        nombreSolicitante: document.getElementById('nombreSolicitante').value,
+        correo: document.getElementById('correo').value,
+        categoria: document.getElementById('categoria').value,
+        descripcion: document.getElementById('descripcion').value,
+        impacto: document.getElementById('impacto').value,
+        urgencia: document.getElementById('urgencia').value,
+        tiempoEstimado: parseInt(document.getElementById('tiempoEstimado').value),
+        estado: document.getElementById('estado').value
+      };
+
+      try {
+        const method = editingTicketId ? 'PUT' : 'POST';
+        const url = editingTicketId ? `/api/tickets/${editingTicketId}` : '/api/tickets';
+
+        const response = await fetch(url, {
+          method: method,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.messages?.[0] || error.message || 'Error al guardar');
+        }
+
+        showMessage(editingTicketId ? '✓ Ticket actualizado' : '✓ Ticket creado exitosamente', 'success');
+        closeTicketModal();
+        loadTickets();
+      } catch (error) {
+        showMessage(error.message, 'error');
+      }
+    }
+
+    // ELIMINAR TICKET
+    async function deleteTicket(id) {
+      if (!confirm('¿Eliminar este ticket?')) return;
+
+      try {
+        const response = await fetch(`/api/tickets/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          }
+        });
+
+        if (!response.ok) throw new Error('Error al eliminar');
+
+        showMessage('✓ Ticket eliminado', 'success');
+        loadTickets();
+      } catch (error) {
+        showMessage('Error al eliminar ticket', 'error');
+      }
+    }
+
+    // CERRAR MODAL
+    function closeTicketModal() {
+      document.getElementById('ticketModal').classList.remove('show');
+    }
+
+    // LOGOUT
+    async function logout() {
+      try {
+        await fetch('/api/logout', { method: 'POST' });
+      } catch (error) {
+        console.error(error);
+      }
+
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
+      window.location.href = '/';
+    }
+
+    // MOSTRAR MENSAJE
+    function showMessage(text, type) {
+      const messageDiv = document.getElementById('message');
+      messageDiv.textContent = text;
+      messageDiv.className = `message ${type} show`;
+
+      setTimeout(() => {
+        messageDiv.classList.remove('show');
+      }, 4000);
+    }
+
+    // CAPITALIZAR
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    // Cerrar modal al hacer clic fuera
+    document.getElementById('ticketModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeTicketModal();
+      }
+    });
+  </script>
+</body>
+</html>

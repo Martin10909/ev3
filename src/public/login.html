@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HelpDesk Smart Priority - Login</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+    }
+
+    .login-box {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      padding: 40px;
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .logo-section {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .logo-section h1 {
+      color: #667eea;
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .logo-section p {
+      color: #999;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .message {
+      margin-top: 20px;
+      padding: 12px;
+      border-radius: 5px;
+      text-align: center;
+      font-size: 14px;
+      display: none;
+    }
+
+    .message.error {
+      background-color: #fee;
+      color: #c33;
+      border: 1px solid #fcc;
+      display: block;
+    }
+
+    .message.success {
+      background-color: #efe;
+      color: #3c3;
+      border: 1px solid #cfc;
+      display: block;
+    }
+
+    .message.loading {
+      background-color: #eef;
+      color: #33c;
+      border: 1px solid #ccf;
+      display: block;
+    }
+
+    .credentials-hint {
+      background-color: #f0f4ff;
+      border-left: 4px solid #667eea;
+      padding: 12px;
+      margin-top: 20px;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #555;
+    }
+
+    .credentials-hint p {
+      margin-bottom: 5px;
+    }
+
+    .credentials-hint strong {
+      color: #667eea;
+    }
+
+    .loader {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    button:disabled .loader {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="login-box">
+      <div class="logo-section">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" style="width: 150px; height: 40px; margin: 0 auto 15px; display: block;">
+          <path d="M 20 30 Q 25 20 30 30" stroke="#667eea" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M 20 40 Q 25 30 30 40" stroke="#667eea" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M 20 50 Q 25 40 30 50" stroke="#667eea" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <text x="50" y="55" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#667eea">STEFANINI</text>
+          <text x="220" y="60" font-family="Arial, sans-serif" font-size="14" fill="#999999" letter-spacing="2">GROUP</text>
+        </svg>
+        <h1 style="margin-top: 20px; font-size: 24px;">HelpDesk</h1>
+        <p>Smart Priority System</p>
+      </div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="username">Usuario</label>
+          <input 
+            type="text" 
+            id="username" 
+            name="username" 
+            placeholder="admin"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            placeholder="••••••••"
+            required
+          >
+        </div>
+
+        <button type="submit" id="loginBtn">
+          <span id="btnText">Ingresar</span>
+          <div class="loader"></div>
+        </button>
+
+        <div id="message" class="message"></div>
+      </form>
+
+      <div class="credentials-hint">
+        <p><strong>Credenciales de prueba:</strong></p>
+        <p>Usuario: <strong>admin</strong></p>
+        <p>Contraseña: <strong>1234</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const messageDiv = document.getElementById('message');
+    const loginBtn = document.getElementById('loginBtn');
+    const btnText = document.getElementById('btnText');
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      // Validaciones del cliente
+      if (!username) {
+        showMessage('Ingrese nombre de usuario correcto', 'error');
+        return;
+      }
+
+      if (!password) {
+        showMessage('Ingrese contraseña correcta', 'error');
+        return;
+      }
+
+      loginBtn.disabled = true;
+      btnText.textContent = 'Cargando...';
+      showMessage('Procesando...', 'loading');
+
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          showMessage(data.message || 'Error en el login', 'error');
+          loginBtn.disabled = false;
+          btnText.textContent = 'Ingresar';
+          return;
+        }
+
+        showMessage('✓ Login exitoso. Redirigiendo...', 'success');
+        
+        // Guardar token
+        localStorage.setItem('authToken', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+
+        // Redirigir a dashboard (cuando esté listo)
+        setTimeout(() => {
+          window.location.href = '/dashboard.html';
+        }, 1500);
+
+      } catch (error) {
+        showMessage('Error de conexión: ' + error.message, 'error');
+        loginBtn.disabled = false;
+        btnText.textContent = 'Ingresar';
+      }
+    });
+
+    function showMessage(text, type) {
+      messageDiv.textContent = text;
+      messageDiv.className = 'message ' + type;
+    }
+
+    // Limpiar campo de contraseña
+    document.getElementById('password').addEventListener('input', function() {
+      messageDiv.className = 'message';
+    });
+  </script>
+</body>
+</html>

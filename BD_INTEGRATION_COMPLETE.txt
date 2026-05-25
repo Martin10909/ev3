@@ -1,0 +1,184 @@
+# 🎯 CONFIGURACIÓN FINAL - Base de Datos Conectada
+
+## ✅ Cambios realizados
+
+### 1. **Dependencias instaladas** (en package.json)
+- ✅ `mysql2` - Driver de MySQL
+- ✅ `dotenv` - Para variables de entorno
+
+### 2. **Archivos creados**
+- ✅ `src/data/mysql.js` - Conexión a BD
+- ✅ `.env` - Variables de entorno
+
+### 3. **Archivos actualizados**
+- ✅ `src/app.js` - Carga de dotenv y conexión a BD
+- ✅ `src/services/authService.js` - Ahora consulta usuarios desde BD
+- ✅ `src/services/ticketService.js` - Ahora usa MySQL en lugar de arrays
+- ✅ `src/controllers/authController.js` - Funciones async
+- ✅ `src/controllers/ticketController.js` - Funciones async
+
+---
+
+## 🚀 PASOS PARA PONER EN FUNCIONAMIENTO
+
+### **Paso 1: Instalar MySQL**
+Si no lo has hecho:
+1. Ve a: https://dev.mysql.com/downloads/mysql/
+2. Descarga MySQL 8.0 Community Server
+3. Instala y marca **"Add to PATH"**
+4. Reinicia tu PC
+
+### **Paso 2: Crear la Base de Datos**
+1. Abre **MySQL Workbench**
+2. Crea una nueva conexión (si no la tienes):
+   - Hostname: `localhost`
+   - Port: `3306`
+   - Username: `root`
+   - Password: [tu contraseña o vacío]
+
+3. Copia TODO el contenido de `database_mysql.sql`
+4. Pega en una **New Query Tab** en Workbench
+5. Ejecuta con `Ctrl + Enter`
+
+**Resultado esperado:**
+```
+✅ Query OK. Database created.
+✅ 12 tables created successfully.
+✅ Sample data inserted.
+```
+
+### **Paso 3: Configurar variables de entorno**
+El archivo `.env` ya está creado. Verifica/actualiza:
+
+```bash
+# .env
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=          # Déjalo vacío si no tienes contraseña, o coloca la tuya
+DB_NAME=helpdesk_db
+```
+
+### **Paso 4: Instalar dependencias Node.js**
+```bash
+cd C:\Users\kevin\Downloads\STF\STF
+npm install
+```
+
+### **Paso 5: Iniciar el servidor**
+```bash
+npm start
+```
+
+**Deberías ver:**
+```
+✅ Conectado a MySQL - Base de datos: helpdesk_db
+🚀 Servidor ejecutándose en http://localhost:3000
+```
+
+### **Paso 6: Probar en el navegador**
+1. Abre: **http://localhost:3000**
+2. Usa estas credenciales:
+   - **Usuario:** `admin`
+   - **Contraseña:** `1234`
+
+---
+
+## 🔐 Credenciales incluidas en la BD
+
+### Administradores:
+| Usuario | Password | Empresa |
+|---------|----------|---------|
+| admin | 1234 | Stefanini Colombia |
+| admin_tech | 1234 | TechCorp Solutions |
+| admin_inno | 1234 | Innovatech Systems |
+
+### Técnicos:
+| Usuario | Password | Especialidad |
+|---------|----------|-------------|
+| juanperez | 1234 | Micro-Informática |
+| mariagonz | 1234 | Redes |
+| carlosrod | 1234 | Infraestructura |
+| sandramtz | 1234 | Base de Datos |
+
+---
+
+## 🧪 Verificar conexión a BD
+
+### En MySQL Workbench:
+```sql
+-- Ver todas las tablas
+SHOW TABLES;
+
+-- Ver usuarios
+SELECT username, rol, empresa_id FROM usuarios;
+
+-- Ver tickets
+SELECT numero_ticket, nombre_solicitante, estado FROM tickets;
+```
+
+### En la aplicación (una vez iniciada):
+- El servidor mostrará: `✅ Conectado a MySQL`
+- Los tickets se guardarán en BD en lugar de en memoria
+- Los usuarios se validarán contra la tabla `usuarios`
+
+---
+
+## ⚠️ Si algo no funciona
+
+### "Error: connect ECONNREFUSED 127.0.0.1:3306"
+- MySQL no está ejecutándose
+- Solución: Abre MySQL desde Services o reinicia
+```bash
+net start MySQL80  # En cmd con permisos
+```
+
+### "Error: Unknown database 'helpdesk_db'"
+- No ejecutaste el script SQL en Workbench
+- Solución: Copia `database_mysql.sql` y pégalo en Workbench
+
+### "Error: Access denied for user 'root'"
+- Contraseña incorrecta en `.env`
+- Solución: Verifica la contraseña en MySQL Workbench
+
+### Las funciones de ticket/auth retornan error
+- Probablemente no instalaste las dependencias
+- Solución: `npm install`
+
+---
+
+## 📋 Datos de prueba
+
+### 3 Empresas preconfiguradas:
+1. **Stefanini Colombia** - Bogotá
+2. **TechCorp Solutions** - Medellín  
+3. **Innovatech Systems** - Cali
+
+### 4 Niveles de soporte:
+1. Nivel 1 - Soporte Básico
+2. Nivel 2 - Soporte Técnico
+3. Nivel 3 - Soporte Crítico
+4. Nivel 4 - Escalada Especial
+
+### 8 Categorías de tickets:
+- Hardware, Software, Red, Cuenta, Base de Datos, Infraestructura, Seguridad, Soporte General
+
+### 6 Tickets de ejemplo
+- En diferentes estados (pendiente, en_proceso, resuelto, etc)
+
+---
+
+## 🎉 ¡Listo!
+
+Tu aplicación HelpDesk Smart Priority ahora está completamente integrada con MySQL y lista para producción.
+
+**Próximos pasos:**
+1. ✅ Crear dashboard/interfaz mejorada
+2. ✅ Implementar reportes y gráficas
+3. ✅ Agregar filtros y búsqueda
+4. ✅ Mejorar autenticación (JWT)
+5. ✅ Agregar notificaciones por email
+
+---
+
+**¿Preguntas? Revisa el archivo `MYSQL_SETUP.md`**

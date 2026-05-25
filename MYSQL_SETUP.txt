@@ -1,0 +1,260 @@
+# 🗄️ Configuración de Base de Datos MySQL - HelpDesk Smart Priority
+
+## 📋 Contenido de esta guía
+
+1. Instalación de MySQL
+2. Configuración de Workbench
+3. Crear la base de datos
+4. Estructura de tablas
+5. Conexión desde Node.js
+6. Variables de entorno
+
+---
+
+## 1️⃣ Instalación de MySQL (Windows)
+
+### Opción A: MySQL Community Server (Recomendado)
+
+1. **Descargar:** https://dev.mysql.com/downloads/mysql/
+2. **Versión:** MySQL 8.0 Community Server
+3. **Instalar:**
+   - Next → Next → Next
+   - ✅ Marcar: "Add MySQL to PATH"
+   - Puerto: **3306** (default)
+   - Username: **root**
+   - Password: **Tu contraseña** (recuérdala!)
+
+4. **Verificar instalación:**
+   ```bash
+   mysql --version
+   ```
+
+### Opción B: MySQL + Workbench (Bundle)
+
+- Descargar: https://dev.mysql.com/downloads/mysql/
+- Seleccionar: "MySQL Installer for Windows"
+- Instala MySQL + Workbench automáticamente
+
+---
+
+## 2️⃣ Configuración de MySQL Workbench
+
+### Crear nueva conexión:
+
+1. **Abre MySQL Workbench**
+2. Click en **"Database" → "Manage Connections"**
+3. **New** → Llena los campos:
+   - **Connection Name:** helpdesk
+   - **Connection Method:** Standard TCP/IP
+   - **Hostname:** localhost
+   - **Port:** 3306
+   - **Username:** root
+   - **Password:** [Tu contraseña]
+4. **Test Connection**
+5. **OK**
+
+### Conectar a la BD:
+
+1. En el inicio, haz doble click en la conexión "helpdesk"
+2. Se abrirá una ventana con el editor SQL
+
+---
+
+## 3️⃣ Crear la Base de Datos
+
+### Paso 1: Copiar el script SQL
+
+1. **Abre el archivo:** `database_mysql.sql` (en la carpeta del proyecto)
+2. **Copia TODO el contenido**
+
+### Paso 2: Ejecutar en Workbench
+
+1. **En Workbench**, haz click en la pestaña **"File"** → **"New Query Tab"**
+2. **Pega TODO el script SQL**
+3. **Selecciona TODO** (`Ctrl + A`)
+4. **Ejecuta** (`Ctrl + Enter` o el icono ▶️)
+
+### Resultado esperado:
+
+```
+✅ Query OK. Database created.
+✅ 11 tables created successfully.
+✅ Sample data inserted.
+```
+
+---
+
+## 4️⃣ Estructura de Tablas Creadas
+
+| Tabla | Descripción |
+|-------|------------|
+| `empresas` | Múltiples empresas/clientes |
+| `servicios` | Departamentos por empresa (Micro-IT, Soporte Nivel 1/2/3, etc) |
+| `usuarios` | Técnicos, admins, supervisores |
+| `niveles_soporte` | Escalas de soporte (1, 2, 3, crítica) |
+| `categorias` | Tipos de tickets (Hardware, Software, Red, etc) |
+| `tickets` | Solicitudes de soporte (la tabla principal) |
+| `comentarios` | Historial y actualizaciones |
+| `auditoria` | Log de cambios |
+| `metricas` | Reportes y estadísticas |
+| `archivos` | Archivos adjuntos |
+| `conocimiento_base` | KB de soluciones |
+| `plantillas` | Templates de respuesta |
+
+---
+
+## 5️⃣ Conexión desde Node.js
+
+### Instalar driver MySQL:
+
+```bash
+cd C:\Users\kevin\Downloads\STF\STF
+npm install mysql2 dotenv
+```
+
+### Crear archivo de conexión:
+
+**Archivo:** `src/data/mysql_connection.js`
+
+```javascript
+const mysql = require('mysql2/promise');
+require('dotenv').config();
+
+const pool = mysql.createPool({
+  host: process.env.DB_HOST || 'localhost',
+  port: process.env.DB_PORT || 3306,
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || 'helpdesk_db',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+  enableKeepAlive: true,
+  keepAliveInitialDelayMs: 0,
+});
+
+// Verificar conexión
+pool.getConnection()
+  .then(conn => {
+    console.log('✅ Conectado a MySQL');
+    conn.release();
+  })
+  .catch(err => {
+    console.error('❌ Error de conexión:', err.message);
+  });
+
+module.exports = pool;
+```
+
+---
+
+## 6️⃣ Variables de Entorno
+
+### Crear archivo `.env` en la raíz del proyecto:
+
+```bash
+# .env
+NODE_ENV=development
+PORT=3000
+
+# Base de Datos MySQL
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=tu_contraseña_aqui
+DB_NAME=helpdesk_db
+
+# Seguridad
+JWT_SECRET=tu_secreto_super_seguro_2024_cambiar_en_produccion
+
+# Archivos
+MAX_FILE_SIZE=5242880
+UPLOAD_DIR=uploads
+```
+
+### Actualizar `src/app.js`:
+
+```javascript
+require('dotenv').config();
+
+const PORT = process.env.PORT || 3000;
+
+// ... resto del código ...
+
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor en http://localhost:${PORT}`);
+});
+```
+
+---
+
+## 7️⃣ Datos de Prueba Incluidos
+
+### Empresas creadas:
+- **Stefanini Colombia** (admin: admin / 1234)
+- **TechCorp Solutions** (admin: admin_tech / 1234)
+- **Innovatech Systems** (admin: admin_inno / 1234)
+
+### Técnicos incluidos:
+- Juan Pérez (juanperez / 1234) - Micro-Informática
+- María González (mariagonz / 1234) - Redes
+- Carlos Rodríguez (carlosrod / 1234) - Infraestructura
+- Sandra Martínez (sandramtz / 1234) - Base de Datos
+
+### Tickets de ejemplo:
+- 6 tickets en diferentes estados
+- Categorías: Hardware, Software, Red, Cuenta, BD, Infraestructura, Seguridad
+- Niveles de soporte del 1 al 3
+
+---
+
+## 8️⃣ Verificar que todo funciona
+
+### En MySQL Workbench:
+
+```sql
+-- Ver todas las tablas
+SHOW TABLES;
+
+-- Ver empresas
+SELECT * FROM empresas;
+
+-- Ver usuarios
+SELECT * FROM usuarios;
+
+-- Ver tickets
+SELECT * FROM tickets;
+```
+
+---
+
+## 9️⃣ Próximos pasos
+
+1. ✅ Base de datos creada
+2. ⏭️ Actualizar servicios (`ticketService.js`, `authService.js`) para usar MySQL
+3. ⏭️ Crear endpoints con consultas a BD
+4. ⏭️ Implementar dashboard
+5. ⏭️ Agregar gráficas y reportes
+
+---
+
+## 🆘 Solución de problemas
+
+### "Error: PROTOCOL_CONNECTION_LOST"
+```sql
+-- En Workbench, ejecutar:
+SHOW VARIABLES LIKE 'max_connections';
+SET GLOBAL max_connections = 1000;
+```
+
+### "Error: Access denied for user 'root'"
+- Verificar contraseña en `.env`
+- Resetear password de MySQL
+
+### "Error: Database 'helpdesk_db' doesn't exist"
+- Ejecutar el script SQL nuevamente en Workbench
+- Verificar que no haya errores
+
+---
+
+**¡La base de datos está lista! 🎉**

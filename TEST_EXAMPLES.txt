@@ -1,0 +1,295 @@
+# Ejemplos de Pruebas con Thunder Client o Postman
+
+## 1. LOGIN
+
+### Request
+```
+POST http://localhost:3000/api/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "1234"
+}
+```
+
+### Respuesta Exitosa (200)
+```json
+{
+  "message": "Login exitoso",
+  "user": {
+    "id": 1,
+    "username": "admin"
+  },
+  "token": "abc123xyz789..."
+}
+```
+
+### Error - Usuario Incorrecto (401)
+```json
+{
+  "error": "Acceso denegado",
+  "message": "Ingrese nombre de usuario correcto"
+}
+```
+
+### Error - Contraseña Incorrecta (401)
+```json
+{
+  "error": "Acceso denegado",
+  "message": "Ingrese contraseña correcta"
+}
+```
+
+---
+
+## 2. CREAR TICKET (Requiere Token)
+
+### Request
+```
+POST http://localhost:3000/api/tickets
+Content-Type: application/json
+Authorization: Bearer TOKEN_DEL_LOGIN
+
+{
+  "nombreSolicitante": "Juan Pérez",
+  "correo": "juan@institución.edu",
+  "categoria": "hardware",
+  "descripcion": "El monitor no enciende",
+  "impacto": "alto",
+  "urgencia": "alta",
+  "tiempoEstimado": 5
+}
+```
+
+### Respuesta (201)
+```json
+{
+  "message": "Ticket creado exitosamente",
+  "ticket": {
+    "id": 1,
+    "nombreSolicitante": "Juan Pérez",
+    "correo": "juan@institución.edu",
+    "categoria": "hardware",
+    "descripcion": "El monitor no enciende",
+    "impacto": "alto",
+    "urgencia": "alta",
+    "tiempoEstimado": 5,
+    "estado": "pendiente",
+    "prioridad": "Crítica",
+    "fechaCreacion": "2024-05-18T15:30:00.000Z"
+  }
+}
+```
+
+### Error - Validación (400)
+```json
+{
+  "error": "Error de validación",
+  "messages": [
+    "Nombre del solicitante es requerido",
+    "Formato de correo inválido"
+  ]
+}
+```
+
+---
+
+## 3. LISTAR TODOS LOS TICKETS
+
+### Request
+```
+GET http://localhost:3000/api/tickets
+Authorization: Bearer TOKEN_DEL_LOGIN
+```
+
+### Respuesta (200)
+```json
+{
+  "count": 1,
+  "tickets": [
+    {
+      "id": 1,
+      "nombreSolicitante": "Juan Pérez",
+      "correo": "juan@institución.edu",
+      "categoria": "hardware",
+      "descripcion": "El monitor no enciende",
+      "impacto": "alto",
+      "urgencia": "alta",
+      "tiempoEstimado": 5,
+      "estado": "pendiente",
+      "prioridad": "Crítica",
+      "fechaCreacion": "2024-05-18T15:30:00.000Z"
+    }
+  ]
+}
+```
+
+---
+
+## 4. OBTENER TICKET POR ID
+
+### Request
+```
+GET http://localhost:3000/api/tickets/1
+Authorization: Bearer TOKEN_DEL_LOGIN
+```
+
+### Respuesta (200)
+```json
+{
+  "ticket": {
+    "id": 1,
+    "nombreSolicitante": "Juan Pérez",
+    "correo": "juan@institución.edu",
+    "categoria": "hardware",
+    "descripcion": "El monitor no enciende",
+    "impacto": "alto",
+    "urgencia": "alta",
+    "tiempoEstimado": 5,
+    "estado": "pendiente",
+    "prioridad": "Crítica",
+    "fechaCreacion": "2024-05-18T15:30:00.000Z"
+  }
+}
+```
+
+### Error - Ticket No Encontrado (404)
+```json
+{
+  "error": "Ticket no encontrado",
+  "message": "No existe ticket con ID 999"
+}
+```
+
+---
+
+## 5. ACTUALIZAR TICKET
+
+### Request
+```
+PUT http://localhost:3000/api/tickets/1
+Authorization: Bearer TOKEN_DEL_LOGIN
+Content-Type: application/json
+
+{
+  "estado": "en proceso",
+  "impacto": "medio"
+}
+```
+
+### Respuesta (200)
+```json
+{
+  "message": "Ticket actualizado exitosamente",
+  "ticket": {
+    "id": 1,
+    "nombreSolicitante": "Juan Pérez",
+    "correo": "juan@institución.edu",
+    "categoria": "hardware",
+    "descripcion": "El monitor no enciende",
+    "impacto": "medio",
+    "urgencia": "alta",
+    "tiempoEstimado": 5,
+    "estado": "en proceso",
+    "prioridad": "Alta",
+    "fechaCreacion": "2024-05-18T15:30:00.000Z"
+  }
+}
+```
+
+---
+
+## 6. ELIMINAR TICKET
+
+### Request
+```
+DELETE http://localhost:3000/api/tickets/1
+Authorization: Bearer TOKEN_DEL_LOGIN
+```
+
+### Respuesta (200)
+```json
+{
+  "message": "Ticket eliminado exitosamente"
+}
+```
+
+---
+
+## 7. LOGOUT
+
+### Request
+```
+POST http://localhost:3000/api/logout
+```
+
+### Respuesta (200)
+```json
+{
+  "message": "Logout exitoso"
+}
+```
+
+---
+
+## 📋 Casos de Prueba para Validaciones
+
+### Test 1: Categoría "red" con urgencia alta
+```json
+{
+  "nombreSolicitante": "María García",
+  "correo": "maria@institución.edu",
+  "categoria": "red",
+  "descripcion": "Internet caído en el edificio A",
+  "impacto": "alto",
+  "urgencia": "alta",
+  "tiempoEstimado": 2
+}
+```
+**Prioridad Esperada:** Crítica (3 + 3 + 1 = 7)
+
+### Test 2: Categoría "cuenta" con tiempo > 4 horas
+```json
+{
+  "nombreSolicitante": "Roberto López",
+  "correo": "roberto@institución.edu",
+  "categoria": "cuenta",
+  "descripcion": "Necesito resetear mi contraseña",
+  "impacto": "medio",
+  "urgencia": "media",
+  "tiempoEstimado": 5
+}
+```
+**Prioridad Esperada:** Alta (2 + 2 + 1 + 1 = 6)
+
+### Test 3: Bajo impacto y urgencia
+```json
+{
+  "nombreSolicitante": "Ana Martínez",
+  "correo": "ana@institución.edu",
+  "categoria": "software",
+  "descripcion": "Necesito instalar un programa",
+  "impacto": "bajo",
+  "urgencia": "baja",
+  "tiempoEstimado": 1
+}
+```
+**Prioridad Esperada:** Baja (1 + 1 = 2)
+
+---
+
+## 🔑 Pasos Completos para Testear
+
+1. **Login primero** para obtener el token
+2. **Copia el token** de la respuesta
+3. **En los siguientes requests**, pega el token en el header: `Authorization: Bearer TOKEN`
+4. **Prueba cada endpoint** siguiendo los ejemplos arriba
+5. **Valida las respuestas** contra los ejemplos esperados
+
+## ⚠️ Notas Importantes
+
+- El servidor está en `http://localhost:3000`
+- Los tokens expiran en 24 horas
+- Los datos se almacenan en memoria (se pierden al reiniciar el servidor)
+- Próximamente se conectará a base de datos

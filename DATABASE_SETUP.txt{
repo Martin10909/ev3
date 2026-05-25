@@ -1,0 +1,164 @@
+# 📌 Notas para Configuración Futura
+
+## Base de Datos
+
+### Carpeta Destinada: `src/data/`
+
+Esta carpeta está lista para:
+
+#### Opción 1: Almacenamiento JSON
+```javascript
+// src/data/ticketsData.js
+const fs = require('fs');
+const path = require('path');
+
+const dataFile = path.join(__dirname, 'tickets.json');
+
+function loadTickets() {
+  try {
+    const data = fs.readFileSync(dataFile, 'utf-8');
+    return JSON.parse(data);
+  } catch (err) {
+    return [];
+  }
+}
+
+function saveTickets(tickets) {
+  fs.writeFileSync(dataFile, JSON.stringify(tickets, null, 2));
+}
+
+module.exports = {
+  loadTickets,
+  saveTickets
+};
+```
+
+#### Opción 2: Base de Datos (MongoDB, MySQL, PostgreSQL)
+```javascript
+// Instalar driver
+npm install mongoose  // Para MongoDB
+npm install mysql2    // Para MySQL
+npm install pg        // Para PostgreSQL
+
+// Crear conexión en src/data/database.js
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost:27017/helpdesk', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+```
+
+## Cambios Necesarios en Services
+
+### ticketService.js
+Reemplazar el arreglo en memoria con llamadas a la base de datos:
+
+```javascript
+const ticketsData = require('../data/ticketsData');
+
+function getAllTickets() {
+  return ticketsData.loadTickets();
+}
+
+function createTicket(ticketData) {
+  const tickets = ticketsData.loadTickets();
+  const newTicket = {
+    id: tickets.length + 1,
+    ...ticketData,
+    prioridad: calculatePriority(...),
+    fechaCreacion: new Date()
+  };
+  tickets.push(newTicket);
+  ticketsData.saveTickets(tickets);
+  return newTicket;
+}
+```
+
+### authService.js
+Cambiar la autenticación de usuarios en memoria a base de datos:
+
+```javascript
+// En lugar de arreglo local
+const User = require('../models/User'); // Modelo de BD
+
+async function validateCredentials(username, password) {
+  const user = await User.findOne({ username });
+  // resto del código...
+}
+```
+
+## Próximas Mejoras
+
+- [ ] Conectar base de datos (JSON o SQL)
+- [ ] Crear página de dashboard (dashboard.html)
+- [ ] Agregar CRUD completo en la interfaz
+- [ ] Implementar roles (admin, usuario, técnico)
+- [ ] Agregar búsqueda y filtros de tickets
+- [ ] Implementar paginación
+- [ ] Agregar notificaciones
+- [ ] Implementar HTTPS con certificados
+- [ ] Agregar autenticación con JWT
+- [ ] Crear pruebas unitarias
+
+## Variables de Entorno (Para Después)
+
+Crear archivo `.env`:
+
+```
+NODE_ENV=development
+PORT=3000
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=1234
+DB_NAME=helpdesk
+JWT_SECRET=tu_secreto_aqui
+```
+
+Instalar dotenv:
+```bash
+npm install dotenv
+```
+
+Usar en app.js:
+```javascript
+require('dotenv').config();
+const PORT = process.env.PORT || 3000;
+```
+
+## Estructura Final Proyectada
+
+```
+STF/
+├── src/
+│   ├── routes/
+│   ├── controllers/
+│   ├── services/
+│   ├── data/
+│   │   ├── tickets.json         (almacenamiento)
+│   │   └── database.js          (conexión)
+│   ├── models/                  (esquemas de BD)
+│   │   ├── Ticket.js
+│   │   └── User.js
+│   ├── middlewares/
+│   ├── public/
+│   │   ├── login.html
+│   │   ├── dashboard.html
+│   │   ├── css/
+│   │   └── js/
+│   └── app.js
+├── .env                         (variables de entorno)
+├── .env.example                 (ejemplo sin datos sensibles)
+├── package.json
+├── README.md
+└── TEST_EXAMPLES.md
+```
+
+## Notas de Implementación
+
+1. **JSON:** Es más simple, perfecto para pruebas iniciales
+2. **SQL:** Mejor para producción y mejor rendimiento
+3. **MongoDB:** Flexible, bueno para prototipado rápido
+
+La estructura actual permite cambiar fácilmente entre cualquiera de estas opciones sin afectar mucho los controllers.

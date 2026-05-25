@@ -1,0 +1,239 @@
+# ⚡ Inicio Rápido
+
+## 🚀 Arranca el Proyecto en 3 Pasos
+
+### Paso 1: Abre Terminal en la carpeta del proyecto
+```bash
+cd c:\Users\Santo Tomas\Desktop\STF
+```
+
+### Paso 2: El servidor ya está configurado
+```bash
+npm start
+```
+O con auto-reload en desarrollo:
+```bash
+npm run dev
+```
+
+### Paso 3: Abre en tu navegador
+```
+http://localhost:3000
+```
+
+---
+
+## 🔐 Credenciales de Prueba
+
+**Usuario:** `admin`  
+**Contraseña:** `1234`
+
+---
+
+## 📋 Estructura Creada
+
+```
+✅ src/routes/           - Rutas de la app
+✅ src/controllers/       - Controladores de lógica HTTP
+✅ src/services/          - Servicios con lógica de negocio
+✅ src/middlewares/       - Validación y autenticación
+✅ src/data/              - (Lista para base de datos)
+✅ src/public/            - Archivos estáticos (HTML, CSS, JS)
+✅ src/app.js             - Archivo principal
+```
+
+---
+
+## 📡 Endpoints Disponibles
+
+### Sin autenticación:
+- `POST /api/login` - Iniciar sesión
+- `POST /api/logout` - Cerrar sesión
+
+### Con autenticación (Requiere token):
+- `POST /api/tickets` - Crear ticket
+- `GET /api/tickets` - Listar tickets
+- `GET /api/tickets/:id` - Ver ticket específico
+- `PUT /api/tickets/:id` - Actualizar ticket
+- `DELETE /api/tickets/:id` - Eliminar ticket
+
+---
+
+## ✨ Validaciones Implementadas
+
+✅ **Campos obligatorios**
+```
+- nombreSolicitante
+- correo (formato validado)
+- categoría
+- descripción
+- impacto (bajo, medio, alto)
+- urgencia (baja, media, alta)
+- tiempoEstimado
+```
+
+✅ **Errores Claros**
+```
+- "Ingrese nombre de usuario correcto"
+- "Ingrese contraseña correcta"
+- "Acceso denegado"
+- "Token inválido o expirado"
+```
+
+---
+
+## 🧮 Algoritmo de Prioridad (IMPLEMENTADO)
+
+Calcula automáticamente basado en:
+
+| Impacto | Puntos |
+|---------|--------|
+| bajo    | 1      |
+| medio   | 2      |
+| alto    | 3      |
+
+| Urgencia | Puntos |
+|----------|--------|
+| baja     | 1      |
+| media    | 2      |
+| alta     | 3      |
+
+**Bonificaciones:**
+- Categoría "red" o "cuenta": +1
+- Tiempo estimado > 4 horas: +1
+
+**Resultado:**
+- 1-3: **Baja**
+- 4-5: **Media**
+- 6: **Alta**
+- 7+: **Crítica**
+
+---
+
+## 🧪 Prueba Rápida con Thunder Client/Postman
+
+### 1. Login
+```
+POST http://localhost:3000/api/login
+Body JSON:
+{
+  "username": "admin",
+  "password": "1234"
+}
+```
+
+**Guardá el token de la respuesta**
+
+### 2. Crear Ticket
+```
+POST http://localhost:3000/api/tickets
+Headers:
+  Authorization: Bearer [TOKEN_AQUI]
+Body JSON:
+{
+  "nombreSolicitante": "Juan Pérez",
+  "correo": "juan@email.com",
+  "categoria": "red",
+  "descripcion": "Red caída",
+  "impacto": "alto",
+  "urgencia": "alta",
+  "tiempoEstimado": 5
+}
+```
+
+### 3. Ver Tickets
+```
+GET http://localhost:3000/api/tickets
+Headers:
+  Authorization: Bearer [TOKEN_AQUI]
+```
+
+---
+
+## 📁 Archivos Importantes
+
+| Archivo | Descripción |
+|---------|-------------|
+| `README.md` | Documentación completa |
+| `TEST_EXAMPLES.md` | Ejemplos de todos los endpoints |
+| `DATABASE_SETUP.md` | Cómo conectar base de datos |
+| `src/app.js` | Punto de entrada |
+| `src/public/login.html` | Interfaz de login |
+
+---
+
+## 🔧 Stack Tecnológico
+
+- **Node.js** - Runtime
+- **Express** - Framework web
+- **Cookie-Parser** - Manejo de cookies
+- **JavaScript vanilla** - Frontend
+- **Fetch API** - Comunicación cliente-servidor
+
+---
+
+## 📌 Próximos Pasos (Cuando Crees BD)
+
+1. Instala el driver de tu BD favorita:
+   ```bash
+   npm install mongoose      # Para MongoDB
+   npm install mysql2         # Para MySQL
+   npm install pg            # Para PostgreSQL
+   ```
+
+2. Actualiza `src/services/ticketService.js` para usar la BD
+
+3. Actualiza `src/services/authService.js` para usar tabla de usuarios
+
+4. Crea modelos en `src/models/`
+
+Ver archivo `DATABASE_SETUP.md` para detalles completos.
+
+---
+
+## ⚠️ Estado Actual
+
+- ✅ Backend funcionando
+- ✅ Autenticación básica
+- ✅ CRUD de tickets
+- ✅ Algoritmo de prioridad
+- ✅ Validaciones
+- ✅ Interfaz de login
+- ⏳ Base de datos (próximamente)
+- ⏳ Dashboard (próximamente)
+
+---
+
+## 🆘 Solución de Problemas
+
+**Error: "puerto 3000 en uso"**
+```bash
+# Cambiar puerto en src/app.js:
+const PORT = 3001;
+```
+
+**Error: "npm no se encuentra"**
+```bash
+# Usar PowerShell con permisos:
+powershell -NoProfile -ExecutionPolicy Bypass
+```
+
+**Server se apaga al hacer cambios**
+```bash
+# Usar nodemon en desarrollo:
+npm run dev
+```
+
+---
+
+## 📸 Para Capturar Evidencias
+
+1. **Estructura:** `dir src` o abre explorer
+2. **Servidor corriendo:** Captura ventana de terminal
+3. **Endpoints:** Usa Postman/Thunder Client
+4. **Login:** http://localhost:3000
+5. **GitHub:** Crea repo y sube el código
+
+---
+
+**¡Listo para trabajar! 🎉**
